@@ -5,6 +5,7 @@
         let styleTag = document.querySelector('#styleTag')
         prefix = prefix || ''
         let n = 0
+        var timer
        setTimeout(function run(){
             n += 1
         codePaper.innerHTML = Prism.highlight(prefix + code.slice(0,n), Prism.languages.css);
@@ -12,16 +13,21 @@
         styleTag.innerHTML = code.slice(0,n)
         codePaper.scrollTop = codePaper.scrollHeight
         if(n < code.length){
-            setTimeout(run,duration)
+            timer =  setTimeout(run,duration)
         }else{
             fn && fn.call()
         }
         },duration)
+        $('.pause').on('click',()=>{
+            window.clearTimeout(timer)
+        })
     }
+   
     $('.actions').on('click','div',function(e){
         let $button =  $(e.currentTarget)
         let speed = $button.attr('data-speed')
         $button.addClass('active').siblings('.active').removeClass('active')
+        
      switch(speed){
          case 'slow':
          duration = 100
@@ -31,6 +37,10 @@
          break
          case 'fast':
          duration = 5
+         break
+         case 'again':
+         window.location.reload()
+         break
      }
      })
     
