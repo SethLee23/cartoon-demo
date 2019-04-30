@@ -1,21 +1,39 @@
 !function(){
-function writeCode(prefix,code,fn){
-    let codePaper = document.querySelector('#code')
-    let styleTag = document.querySelector('#styleTag')
-    prefix = prefix || ''
-    let n = 0
-    let timer = setInterval(()=>{
-        n += 1
-    codePaper.innerHTML = Prism.highlight(prefix + code.slice(0,n), Prism.languages.css);
-    // codePaper.innerHTML = code.slice(0,n)
-    styleTag.innerHTML = code.slice(0,n)
-    codePaper.scrollTop = codePaper.scrollHeight
-    if(n>=code.length){
-        window.clearInterval(timer)
-        fn && fn.call()
+    var duration = 50
+    function writeCode(prefix,code,fn){
+        let codePaper = document.querySelector('#code')
+        let styleTag = document.querySelector('#styleTag')
+        prefix = prefix || ''
+        let n = 0
+       setTimeout(function run(){
+            n += 1
+        codePaper.innerHTML = Prism.highlight(prefix + code.slice(0,n), Prism.languages.css);
+        // codePaper.innerHTML = code.slice(0,n)
+        styleTag.innerHTML = code.slice(0,n)
+        codePaper.scrollTop = codePaper.scrollHeight
+        if(n < code.length){
+            setTimeout(run,duration)
+        }else{
+            fn && fn.call()
+        }
+        },duration)
     }
-    },10)
-}
+    $('.actions').on('click','div',function(e){
+        let $button =  $(e.currentTarget)
+        let speed = $button.attr('data-speed')
+        $button.addClass('active').siblings('.active').removeClass('active')
+     switch(speed){
+         case 'slow':
+         duration = 100
+         break
+         case 'normal':
+         duration = 50
+         break
+         case 'fast':
+         duration = 5
+     }
+     })
+    
 let code = `
 /*
 *首先准备皮卡丘的皮
